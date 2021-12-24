@@ -16,7 +16,7 @@
             <h1 class="mt-4 mb-4">Welcome to the club!</h1>
         </div>
         <div class="justify-content-center text-center">
-            <h3>New member</h3>
+            <h5>New member</h5>
             <div>
                 Name:
                 <label>
@@ -37,7 +37,11 @@
     </div>
     <div class="col-4"></div>
 </div>
-    <div class="row mt-4">
+    <div class="justify-content-center text-center mt-4">
+        <h5>Members</h5>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-4"></div>
         <table class="table col-4 justify-content-center">
             <tr>
@@ -66,12 +70,21 @@
         let r = {}
         r["name"] = document.getElementById("name").value;
         r["email"] = document.getElementById("email").value;
+        if (r["name"] === "" || r["email"] === "") {
+            alert("Fill all fields!")
+            return
+        }
         fetch('http://localhost:8000/add_member', {
             headers: {'content-type': 'application/json'},
             method: 'POST',
             body: JSON.stringify(r),
+        }).then(response => {
+            if (response.ok) {
+                location.reload()
+            } else if (!response.ok) {
+                alert("Email address already used! Try to choose another one.")
+            }
         })
-        location.reload()
     }
     function cancel() {
         document.getElementById("name").value = ""

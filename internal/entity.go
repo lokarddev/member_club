@@ -17,6 +17,6 @@ func NewMember(dto MemberDto) *Member {
 	return &Member{
 		Name:             dto.Name,
 		Email:            dto.Email,
-		RegistrationDate: time.Now().Format("202-01-2006"),
+		RegistrationDate: time.Now().Format("2-01-2006"),
 	}
 }

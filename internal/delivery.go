@@ -2,7 +2,6 @@ package internal
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -17,14 +16,18 @@ func RegisterRoutes() {
 
 func clubMemberHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		member, err := parseMemberRequest(r.Body)
+		memberDto, err := parseMemberRequest(r.Body)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		Members.Add(*NewMember(*member))
-		fmt.Println(Members)
+		if err = Members.IsValid(*memberDto); err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		Members.Add(*NewMember(*memberDto))
 	}
 	response(w)
 }
