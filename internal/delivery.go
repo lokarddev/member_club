@@ -10,12 +10,12 @@ import (
 )
 
 func RegisterRoutes() {
-	http.HandleFunc("/add_member", clubMemberHandler)
 	http.HandleFunc("/", indexHandler)
 }
 
-func clubMemberHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
 		memberDto, err := parseMemberRequest(r.Body)
 		if err != nil {
 			log.Println(err)
@@ -28,12 +28,10 @@ func clubMemberHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		Members.Add(*NewMember(*memberDto))
+		response(w)
+	case http.MethodGet:
+		response(w)
 	}
-	response(w)
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	response(w)
 }
 
 func response(w http.ResponseWriter) {
