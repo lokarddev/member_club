@@ -30,7 +30,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err = Members.IsValid(*memberDto); err != nil {
+		if err = memberDto.IsValid(); err != nil {
 			_ = loggerResponse(r, http.StatusBadRequest)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
