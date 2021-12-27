@@ -36,21 +36,29 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		Members.Add(*NewMember(*memberDto))
-		response(w, r)
+		err = response(w, r)
+		if err != nil {
+			log.Println(err.Error())
+		}
 	case http.MethodGet:
-		response(w, r)
+		err := response(w, r)
+		if err != nil {
+			log.Println(err.Error())
+		}
 	}
 }
 
-func response(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./templates/index.html"))
+func response(w http.ResponseWriter, r *http.Request) error {
+	tmpl, err := template.ParseFiles("./templates/index.html")
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
+	}
 	data := Members.members
-	if err := logger.Output(2, fmt.Sprintf("%s, %s, %v", r.Method, r.Host, http.StatusOK)); err != nil {
-		log.Println(err)
-	}
-	if err := tmpl.Execute(w, data); err != nil {
-		log.Println("Something goes wrong try again")
-	}
+	err = logger.Output(2, fmt.Sprintf("%s, %s, %v", r.Method, r.Host, http.StatusOK))
+	err = tmpl.Execute(w, data)
+	return err
 }
 
 func parseMemberRequest(body io.ReadCloser) (*MemberDto, error) {
