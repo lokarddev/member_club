@@ -13,6 +13,7 @@ const (
 
 func main() {
 	log.Printf("Started server listening on port %v", port)
-	internal.RegisterRoutes()
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
+	mux := http.NewServeMux()
+	internal.RegisterRoutes(mux)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), mux))
 }

@@ -81,12 +81,7 @@
             if (response.ok) {
                 location.reload()
             } else if (!response.ok) {
-                return response.text().then(text => {
-                    msg = text.toString()
-                    if (msg === "email already exists") {
-                        alert("Email address already used! Try to choose another one.")
-                    }
-                })
+                alert("Invalid input, try again!")
             }
         })
     }
